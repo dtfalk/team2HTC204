@@ -1,0 +1,75 @@
+﻿@page "/Product/Edit/{id:int}"
+@model ProductEditModel
+@{
+    ViewData["Title"] = "ProductEdit";
+}
+
+
+@if (HttpContext.Session.GetString("IsAdmin") == "true" && HttpContext.Session.GetString("AuthToken") != null)
+{
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div  id="successMessage" class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="admin-edit-form">
+        <h3>Edit Product</h3>
+        <form method="post" enctype="multipart/form-data" asp-page-handler="EditProduct">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="productImage">Image</label>
+                        <img id="imagePreview" src="@Model.Product.ImageUrl" alt="Product Image" class="img-thumbnail" style="cursor: pointer; max-width: 100%; height: auto;" />
+                        <input type="file" id="productImage" name="Image" class="form-control" style="display: none;" asp-for="Image"/>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="productName">Name</label>
+                        <input type="text" id="productName" name="Name" value="@Model.Product.Name" class="form-control" asp-for="Product.Name"/> 
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">Description</label>
+                        <textarea id="productDescription" name="Description" class="form-control" asp-for="Product.Description">@Model.Product.Description</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price: $</label>
+                        <input type="text" id="productPrice" name="Price" value="@Model.Product.Price" class="form-control"  asp-for="Product.Price"/>
+                    </div>
+                    <input type="hidden" name="productId" value="@Model.Product.Id" />
+                    <input type="hidden" name="initialProductUrl" value="@Model.Product.ImageUrl" />
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a asp-page="/Product/Product" asp-route-id="@Model.Product.Id" class="btn btn-secondary alert-danger">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+}
+
+@section Scripts {
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var successMessage = document.getElementById("successMessage");
+            if (successMessage) {
+                setTimeout(function() {
+                    successMessage.style.display = "none";
+                }, 1500);
+            }
+        });
+
+        document.getElementById("imagePreview").addEventListener("click", function() {
+            document.getElementById("productImage").click();
+        });
+
+        document.getElementById("productImage").addEventListener("change", function(event) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById("imagePreview").src = e.target.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        });
+    </script>
+}

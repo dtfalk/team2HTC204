@@ -1,0 +1,55 @@
+﻿@page "/Profile"
+@model UserProfileModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="profile-wrapper">
+    @if (ViewData["SuccessMessage"] != null)
+    {
+        <div id="success-message" class="alert alert-success" role="alert">
+            @ViewData["SuccessMessage"]
+        </div>
+    }
+    <div class="container profile-container">
+        <h1 class="title">Edit Your Details</h1>
+
+        <form method="post" class="form">
+            <div class="form-group">
+                <label asp-for="User.Name" class="form-label"></label>
+                <input asp-for="User.Name" class="form-control" />
+                <span asp-validation-for="User.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="User.Email" class="form-label"></label>
+                <input asp-for="User.Email" class="form-control" />
+                <span asp-validation-for="User.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="User.Address" class="form-label"></label>
+                <textarea asp-for="User.Address" class="form-control"></textarea>
+                <span asp-validation-for="User.Address" class="text-danger"></span>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a asp-page="/Home/Home" class="btn btn-secondary alert-danger">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                setTimeout(function () {
+                    successMessage.style.display = 'none';
+                }, 1500);
+            }
+        });
+    </script>
+}
+

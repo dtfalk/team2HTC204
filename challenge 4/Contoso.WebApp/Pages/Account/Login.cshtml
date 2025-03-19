@@ -1,0 +1,38 @@
+@page "/Login"
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<link rel="stylesheet" href="~/Pages/Account/Login.cshtml.css" />
+
+<div class="login-wrapper">
+    <div class="login-container">
+        <h2>Login</h2>
+
+        <form method="post">
+            <div>
+                <label for="username">Email:</label>
+                <input type="text" id="email" name="Email" asp-for="Input.Email" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="Password" asp-for="Input.Password" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+
+        @if (Model.ErrorMessage != null)
+        {
+            <div class="alert alert-danger">
+                @Model.ErrorMessage
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

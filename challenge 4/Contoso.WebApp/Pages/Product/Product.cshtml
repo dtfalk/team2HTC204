@@ -1,0 +1,58 @@
+@page "/Product/{id:int}"
+@model ProductModel
+@{
+    ViewData["Title"] = "Product";
+} 
+
+
+@if (Model.Product != null)
+{
+    @if (Model.SuccessMessage != null && Model.SuccessMessage != string.Empty)
+    {
+        <div id="success-message" class="alert alert-success" role="alert">
+            @Model.SuccessMessage
+        </div>
+    }
+    <div class="product-card-details">
+        <div class="product-card-details-container">
+            <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" class="product-image-details" />
+        </div>
+        <div class="product-info">
+            <h2>@Model.Product.Name</h2>
+            <p>@Model.Product.Description</p>
+            <p>Price: @Model.Product.Price.ToString("C")</p>
+            @if (HttpContext.Session.GetString("IsAdmin") == "true" && HttpContext.Session.GetString("AuthToken") != null)
+            {
+                <a asp-page="/ProductEdit/ProductEdit" asp-route-id="@Model.Product.Id" class="btn btn-primary">Edit</a>
+                <a asp-page="/Product/Delete" asp-route-id="@Model.Product.Id" class="btn btn-danger">Delete</a>
+            }
+            else
+            {
+                <form method="post" asp-page-handler="AddToCart">
+                    <input type="hidden" name="productId" value="@Model.Product.Id" />
+                    <button type="submit" class="btn btn-success">Add to Cart</button>
+                </form>
+            }     
+        </div>  
+    </div>
+
+}  
+else
+{
+    <p>No product found.</p>
+}
+
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var successMessage = document.getElementById("success-message");
+            if (successMessage) {
+                console.log("success message found");
+                setTimeout(function () {
+                    successMessage.style.display = "none";
+                }, 1500);
+            }
+        });
+    </script>
+}
